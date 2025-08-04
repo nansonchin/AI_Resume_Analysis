@@ -11,6 +11,7 @@ const fileUploader = ({onFileSelect}:FileUploaderProps) => {
 
     const onDrop=useCallback((acceptedFiles:File[])=>{
         const file = acceptedFiles[0] || null
+        setSelectedFile(file)
         onFileSelect?.(file)
     },[onFileSelect])   
 
