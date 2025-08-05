@@ -80,7 +80,7 @@ const upload = () => {
         data.feedback=JSON.parse(feedbackTest)
         await kv.set(uuid,JSON.stringify(data))
         setStatusText("Done! Redirecting to your resume...")
-        console.log(data)
+        navigate(`/resume/${uuid}`) 
     
     }
     const handleSubmit = (e:FormEvent<HTMLFormElement>)=>{
