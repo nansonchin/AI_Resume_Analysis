@@ -24,8 +24,15 @@ const resume = () => {
     },[isLoading])
 
     useEffect(()=>{
+        const dumpAllKV = async () => {
+            const items = await kv.list('resume:*', true);
+            console.log("All KV items:", items);
+        };
+        dumpAllKV();
+    })
+    useEffect(()=>{
         const loadResume = async()=>{
-            const resume = await kv.get(`resume:${id}`)
+            const resume = await kv.get(id as string)
             if(!resume){
                 console.error("Resume not found")
                 return  

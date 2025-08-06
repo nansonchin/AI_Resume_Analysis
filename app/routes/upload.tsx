@@ -65,22 +65,36 @@ const upload = () => {
             companyName,jobTitle,jobDescription,
             feedback:'',
         }
-        await kv.set(uuid,JSON.stringify(data))
-        setStatusText("Saving your resume data...")
-        const feedback = await ai.feedback(
-            uploadedFile.path,
-            prepareInstructions({jobTitle,jobDescription})
-        )
-        if(!feedback){
+        console.log(data)
+        try{
+            await kv.set(uuid,JSON.stringify(data))
+            setStatusText("Saving your resume data...")
+            const feedback = await ai.feedback(
+                uploadedFile.path,
+                prepareInstructions({jobTitle,jobDescription})
+            )
+            if(!feedback){
+                setIsError(true)
+                setIsProcessing(false)
+                return setStatusText("Failed to analyze your resume. Please try again.")
+            }
+            const feedbackTest=typeof feedback.message.content === 'string' ? feedback.message.content : feedback.message.content[0].text
+            console.log("Feedback received:", feedbackTest)
+            data.feedback=JSON.parse(feedbackTest)
+            const setKey=`resume:${uuid}`
+            await kv.set(uuid,JSON.stringify(data))
+            console.log("Resume data saved:", data)
+            setStatusText("Done! Redirecting to your resume...")
+            navigate(`/resume/${uuid}`) 
+        }catch(error){
             setIsError(true)
             setIsProcessing(false)
-            return setStatusText("Failed to analyze your resume. Please try again.")
+            // Safely convert error to string
+            const errorMessage = typeof error === 'string' ? error : error instanceof Error ? error.message : 'An unknown error occurred.';
+            return setStatusText(errorMessage)
         }
-        const feedbackTest=typeof feedback.message.content === 'string' ? feedback.message.content : feedback.message.content[0].text
-        data.feedback=JSON.parse(feedbackTest)
-        await kv.set(uuid,JSON.stringify(data))
-        setStatusText("Done! Redirecting to your resume...")
-        navigate(`/resume/${uuid}`) 
+       
+   
     
     }
     const handleSubmit = (e:FormEvent<HTMLFormElement>)=>{

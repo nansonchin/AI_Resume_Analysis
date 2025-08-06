@@ -19,7 +19,7 @@ export default function Home() {
     const [loadingResume,setIsLoadingResume] = useState(false)
     useEffect(()=>{
         if(!auth.isAuthenticated){
-            navigate('/auth?next=/')
+            navigate('/auth')
         }
     },[auth.isAuthenticated])
 
@@ -27,8 +27,7 @@ export default function Home() {
     const loadResumes = async () => {
       setIsLoadingResume(true);
 
-      const resumes = (await kv.list('resume:*', true)) as KVItem[];
-
+      const resumes = (await kv.list('*', true)) as KVItem[];
       const parsedResumes = resumes?.map((resume) => (
           JSON.parse(resume.value) as Resume
       ))

@@ -9,13 +9,14 @@ export const meta =()=>([
 const auth = () => {
     const{isLoading,auth} = usePuterStore()
     const location = useLocation()
-    const next = location.search.split('next=')[1]
+    const authenticated_Home = "/"
     const navigate = useNavigate()
     useEffect(()=>{
+        // console.log(auth.isAuthenticated, next)
         if(auth.isAuthenticated){
-            navigate(next)
+            navigate(authenticated_Home)
         }
-    },[auth.isAuthenticated,next])
+    },[auth.isAuthenticated,authenticated_Home])
 
   return (
     <main className='bg-[url("/images/bg-auth.svg")] bg-cover h-screen flex items-center justify-center'>
